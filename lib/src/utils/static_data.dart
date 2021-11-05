@@ -1,3 +1,3 @@
 class StaticData {
-  static String url = "https://tuandesa1.heraya.web.id";
+  static String url = "https://tuandesa.heraya.link";
 }
