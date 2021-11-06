@@ -75,156 +75,152 @@ class _MenuBantuanViewState extends State<MenuBantuanView> {
           ],
         ),
       ),
-      body: Container(
+      body: SingleChildScrollView(
+        child: Container(
+            child: Container(
           color: CustomStyle.bgColor,
-          padding: EdgeInsets.all(20),
+          padding: EdgeInsets.only(top: 20, right: 20, left: 20, bottom: 30),
           height: MediaQuery.of(context).size.height * 1,
           width: MediaQuery.of(context).size.width * 1,
-          child: SingleChildScrollView(
-            child: Container(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  text("Jenis Bantuan Sosial"),
-                  FutureBuilder(
-                    future: JenisModel.getJenis("bantuan"),
-                    builder: (BuildContext context, AsyncSnapshot snapshot) {
-                      if (snapshot.hasData) {
-                        return Card(
-                          margin: EdgeInsets.only(bottom: 20, top: 10),
-                          child: Container(
-                            padding: EdgeInsets.all(5),
-                            child: ButtonTheme(
-                              alignedDropdown: true,
-                              child: DropdownButton<Map<String, dynamic>>(
-                                  isExpanded: true,
-                                  hint: Text('--Pilih Jenis Bantuan Sosial--'),
-                                  value: jenisBantuanSelected,
-                                  icon: Icon(Icons.arrow_downward),
-                                  iconSize: 24,
-                                  elevation: 16,
-                                  style: TextStyle(
-                                      color: Colors.black87,
-                                      fontWeight: FontWeight.bold),
-                                  underline: Container(
-                                    height: 2,
-                                    color: Colors.deepPurpleAccent,
-                                  ),
-                                  items: _jeniBantuan.map<
-                                          DropdownMenuItem<
-                                              Map<String, dynamic>>>(
-                                      (Map<String, dynamic> value) {
-                                    return DropdownMenuItem<
-                                            Map<String, dynamic>>(
-                                        value: value,
-                                        child: Text(value['jenis']));
-                                  }).toList(),
-                                  onChanged: (value) {
-                                    setState(() {
-                                      jenisBantuanSelected = value ?? {};
-                                    });
-                                    SoalBantuanModel.getSoalBantuans(
-                                            value!['id'].toString(), context)
-                                        .then((snapshot) {
-                                      setState(() {
-                                        no = 0;
-                                        listJawabanHasil = [];
-                                        valueJawaban = 0;
-                                        listSoal = snapshot;
-                                      });
-                                    });
-                                  }),
-                            ),
-                          ),
-                        );
-                      } else {
-                        return Container(
-                            child: Center(
-                                child: SizedBox(
-                                    width: 30,
-                                    height: 30,
-                                    child: CircularProgressIndicator())));
-                      }
-                    },
-                  ),
-                  (listSoal != null) ? soalBantuan(context) : Container(),
-                  text("Komentar"),
-                  Container(
-                    height: 170,
-                    child: Card(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              text("Jenis Bantuan Sosial"),
+              FutureBuilder(
+                future: JenisModel.getJenis("bantuan"),
+                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                  if (snapshot.hasData) {
+                    return Card(
                       margin: EdgeInsets.only(bottom: 20, top: 10),
                       child: Container(
-                        margin: EdgeInsets.all(10),
-                        child: TextField(
-                          maxLines: 10,
-                          decoration: InputDecoration(
-                              border: InputBorder.none,
-                              hintText: 'Masukkan Komentar Anda'),
-                          onChanged: (value) {
-                            setState(() {
-                              komentar = value;
-                            });
-                          },
+                        padding: EdgeInsets.all(5),
+                        child: ButtonTheme(
+                          alignedDropdown: true,
+                          child: DropdownButton<Map<String, dynamic>>(
+                              isExpanded: true,
+                              hint: Text('--Pilih Jenis Bantuan Sosial--'),
+                              value: jenisBantuanSelected,
+                              icon: Icon(Icons.arrow_downward),
+                              iconSize: 24,
+                              elevation: 16,
+                              style: TextStyle(
+                                  color: Colors.black87,
+                                  fontWeight: FontWeight.bold),
+                              underline: Container(
+                                height: 2,
+                                color: Colors.deepPurpleAccent,
+                              ),
+                              items: _jeniBantuan
+                                  .map<DropdownMenuItem<Map<String, dynamic>>>(
+                                      (Map<String, dynamic> value) {
+                                return DropdownMenuItem<Map<String, dynamic>>(
+                                    value: value, child: Text(value['jenis']));
+                              }).toList(),
+                              onChanged: (value) {
+                                setState(() {
+                                  jenisBantuanSelected = value ?? {};
+                                });
+                                SoalBantuanModel.getSoalBantuans(
+                                        value!['id'].toString(), context)
+                                    .then((snapshot) {
+                                  setState(() {
+                                    no = 0;
+                                    listJawabanHasil = [];
+                                    valueJawaban = 0;
+                                    listSoal = snapshot;
+                                  });
+                                });
+                              }),
                         ),
                       ),
-                    ),
-                  ),
-                  text("Lampiran"),
-                  FlatButton(
-                    onPressed: () {
-                      loadAssets();
-                    },
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Image.asset(
-                          "images/upload.png",
-                          width: 30,
-                          height: 30,
-                        ),
-                        Text(
-                            lampiran.length == 0
-                                ? "Belum ada lampiran yang dipilih"
-                                : "${lampiran.length} lampiran",
-                            style: TextStyle(fontWeight: FontWeight.w600))
-                      ],
-                    ),
-                  ),
-                  Center(
-                    child: ButtonTheme(
-                      minWidth: 200.0,
-                      height: 40.0,
-                      child: RaisedButton(
-                          onPressed: loading
-                              ? null
-                              : () {
-                                  if (jenisBantuanSelected == null ||
-                                      komentar == null ||
-                                      lampiran.length == 0 ||
-                                      listJawabanHasil.length !=
-                                          listSoal?.length) {
-                                    ShowAlert.show(context, "Validasi",
-                                        "Semua data harus diisi!");
-                                  } else {
-                                    postBantuan(context);
-                                  }
-                                },
-                          shape: new RoundedRectangleBorder(
-                              borderRadius: new BorderRadius.circular(20)),
-                          color: buttonColor,
-                          child: !loading
-                              ? Text("Simpan",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold))
-                              : CircularProgressIndicator()),
-                    ),
-                  )
-                ],
+                    );
+                  } else {
+                    return Container(
+                        child: Center(
+                            child: SizedBox(
+                                width: 30,
+                                height: 30,
+                                child: CircularProgressIndicator())));
+                  }
+                },
               ),
-            ),
-          )),
+              (listSoal != null) ? soalBantuan(context) : Container(),
+              text("Komentar"),
+              Container(
+                height: 170,
+                child: Card(
+                  margin: EdgeInsets.only(bottom: 20, top: 10),
+                  child: Container(
+                    margin: EdgeInsets.all(10),
+                    child: TextField(
+                      maxLines: 10,
+                      decoration: InputDecoration(
+                          border: InputBorder.none,
+                          hintText: 'Masukkan Komentar Anda'),
+                      onChanged: (value) {
+                        setState(() {
+                          komentar = value;
+                        });
+                      },
+                    ),
+                  ),
+                ),
+              ),
+              text("Lampiran"),
+              FlatButton(
+                onPressed: () {
+                  loadAssets();
+                },
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Image.asset(
+                      "images/upload.png",
+                      width: 30,
+                      height: 30,
+                    ),
+                    Text(
+                        lampiran.length == 0
+                            ? "Belum ada lampiran yang dipilih"
+                            : "${lampiran.length} lampiran",
+                        style: TextStyle(fontWeight: FontWeight.w600))
+                  ],
+                ),
+              ),
+              Center(
+                child: ButtonTheme(
+                  minWidth: 400.0,
+                  height: 40.0,
+                  child: RaisedButton(
+                      onPressed: loading
+                          ? null
+                          : () {
+                              if (jenisBantuanSelected == null ||
+                                  komentar == null ||
+                                  lampiran.length == 0 ||
+                                  listJawabanHasil.length != listSoal!.length) {
+                                ShowAlert.show(context, "Validasi",
+                                    "Semua data harus diisi!");
+                              } else {
+                                postBantuan(context);
+                              }
+                            },
+                      shape: new RoundedRectangleBorder(
+                          borderRadius: new BorderRadius.circular(20)),
+                      color: buttonColor,
+                      child: !loading
+                          ? Text("Simpan",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold))
+                          : CircularProgressIndicator()),
+                ),
+              )
+            ],
+          ),
+        )),
+      ),
     );
   }
 
@@ -236,6 +232,9 @@ class _MenuBantuanViewState extends State<MenuBantuanView> {
   }
 
   Widget soalBantuan(context) {
+    if (listSoal!.isEmpty) {
+      return Text("Belum Ada Pilihan Soal");
+    }
     SoalBantuanModel soalBantuanModel = listSoal![no];
     return Card(
       child: Container(
@@ -250,12 +249,12 @@ class _MenuBantuanViewState extends State<MenuBantuanView> {
             ),
             Container(
                 width: MediaQuery.of(context).size.width * 1,
-                height: 100,
+                height: soalBantuanModel.jawaban.length * 60,
                 child: jawabanBantuan(soalBantuanModel.jawaban)),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
-                RaisedButton(
+                ElevatedButton(
                   onPressed: (no == 0)
                       ? null
                       : (listJawabanHasil.length == listSoal!.length)
@@ -268,7 +267,7 @@ class _MenuBantuanViewState extends State<MenuBantuanView> {
                           : null,
                   child: Text("Kembali"),
                 ),
-                RaisedButton(
+                ElevatedButton(
                   onPressed:
                       (valueJawaban == null || no == listSoal!.length - 1)
                           ? null
@@ -296,6 +295,18 @@ class _MenuBantuanViewState extends State<MenuBantuanView> {
   }
 
   Widget jawabanBantuan(jawaban) {
+    if (valueJawaban == 0) {
+      List<int> jaw = listJawabanHasil;
+      if (jaw.asMap().containsKey(no)) {
+        jaw[no] = 0;
+      } else {
+        jaw.add(0);
+      }
+      setState(() {
+        valueJawaban = 0;
+        listJawabanHasil = jaw;
+      });
+    }
     return ListView.builder(
       itemCount: jawaban.length,
       itemBuilder: (BuildContext context, int index) {
