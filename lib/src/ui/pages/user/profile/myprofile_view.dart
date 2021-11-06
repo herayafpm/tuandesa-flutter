@@ -30,6 +30,7 @@ class _MyProfileViewState extends State<MyProfileView> {
             type: '')
         .getProfile(context)
         .then((val) {
+      // print(val);
       setState(() {
         _refreshController.refreshCompleted();
       });

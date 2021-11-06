@@ -30,7 +30,7 @@ class _HomePageViewState extends State<HomePageView> {
       print(e.toString());
     }
     if (!mounted) {
-      return Future.value(null);
+      return Future.value("ok");
     }
 
     return _updateConnectionStatus(result);

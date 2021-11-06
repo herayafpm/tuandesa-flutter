@@ -26,15 +26,16 @@ class ProfileModel extends Equatable {
       required this.createdAt,
       required this.type});
   factory ProfileModel.create(Map<String, dynamic> data) {
+    // print(data);
     return ProfileModel(
         id: data['id'].toString(),
         nik: data['username'].toString(),
         name: data['name'],
         createdAt: data['created_at'],
         type: data['type'],
-        alamat: data['address'],
-        ttl: data['ttl'],
-        noHP: data['no_hp'],
+        alamat: data['address'] ?? "",
+        ttl: data['ttl'] ?? "",
+        noHP: data['no_hp'] ?? "",
         email: data['email']);
   }
 
@@ -68,8 +69,17 @@ class ProfileModel extends Equatable {
       return ProfileModel.create(jsonDecode(pref.getString("profile") ?? ""));
     } catch (e) {
       print(e.toString());
+      return ProfileModel(
+          alamat: '',
+          createdAt: '',
+          email: '',
+          id: '',
+          name: '',
+          nik: '',
+          noHP: '',
+          ttl: '',
+          type: '');
     }
-    return Future.error("Not Found");
   }
 
   static Future setProfile(Map<String, dynamic> data) async {

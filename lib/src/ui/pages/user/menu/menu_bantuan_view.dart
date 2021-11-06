@@ -46,13 +46,13 @@ class _MenuBantuanViewState extends State<MenuBantuanView> {
   List<int> listJawabanHasil = [];
 
   late JawabanModel jawaban;
-  late List<SoalBantuanModel> listSoal;
+  List<SoalBantuanModel>? listSoal;
   Color buttonColor = Color(0xff00B894);
   String name = "";
   int no = 0;
   String komentar = "";
   bool loading = false;
-  late Map<String, dynamic> jenisBantuanSelected;
+  Map<String, dynamic>? jenisBantuanSelected;
   List<Map<String, dynamic>> _jeniBantuan = [];
   List<Asset> lampiran = [];
   late String _error;
@@ -202,7 +202,7 @@ class _MenuBantuanViewState extends State<MenuBantuanView> {
                                       komentar == null ||
                                       lampiran.length == 0 ||
                                       listJawabanHasil.length !=
-                                          listSoal.length) {
+                                          listSoal?.length) {
                                     ShowAlert.show(context, "Validasi",
                                         "Semua data harus diisi!");
                                   } else {
@@ -236,7 +236,7 @@ class _MenuBantuanViewState extends State<MenuBantuanView> {
   }
 
   Widget soalBantuan(context) {
-    SoalBantuanModel soalBantuanModel = listSoal[no];
+    SoalBantuanModel soalBantuanModel = listSoal![no];
     return Card(
       child: Container(
         width: MediaQuery.of(context).size.width * 1,
@@ -258,7 +258,7 @@ class _MenuBantuanViewState extends State<MenuBantuanView> {
                 RaisedButton(
                   onPressed: (no == 0)
                       ? null
-                      : (listJawabanHasil.length == listSoal.length)
+                      : (listJawabanHasil.length == listSoal!.length)
                           ? () {
                               setState(() {
                                 valueJawaban = listJawabanHasil[no - 1];
@@ -269,21 +269,22 @@ class _MenuBantuanViewState extends State<MenuBantuanView> {
                   child: Text("Kembali"),
                 ),
                 RaisedButton(
-                  onPressed: (valueJawaban == null || no == listSoal.length - 1)
-                      ? null
-                      : () {
-                          if (listJawabanHasil.length == listSoal.length) {
-                            setState(() {
-                              valueJawaban = listJawabanHasil[no + 1];
-                              no += 1;
-                            });
-                          } else {
-                            setState(() {
-                              valueJawaban = 0;
-                              no += 1;
-                            });
-                          }
-                        },
+                  onPressed:
+                      (valueJawaban == null || no == listSoal!.length - 1)
+                          ? null
+                          : () {
+                              if (listJawabanHasil.length == listSoal!.length) {
+                                setState(() {
+                                  valueJawaban = listJawabanHasil[no + 1];
+                                  no += 1;
+                                });
+                              } else {
+                                setState(() {
+                                  valueJawaban = 0;
+                                  no += 1;
+                                });
+                              }
+                            },
                   child: Text("Lanjutkan"),
                 )
               ],
@@ -326,12 +327,12 @@ class _MenuBantuanViewState extends State<MenuBantuanView> {
           loading = true;
         });
         List<String> files = [];
-        List<String> soal = listSoal.map((val) => val.soal).toList();
+        List<String> soal = listSoal!.map((val) => val.soal).toList();
         List<String> id_jawaban = [];
         List<String> jawaban = [];
         List<String> nilai = [];
         for (int i = 0; i < listJawabanHasil.length; i++) {
-          List<JawabanModel> listJaw = listSoal[i].jawaban;
+          List<JawabanModel> listJaw = listSoal![i].jawaban;
           id_jawaban.add(listJaw[listJawabanHasil[i]].id);
           jawaban.add(listJaw[listJawabanHasil[i]].jawaban);
           nilai.add(listJaw[listJawabanHasil[i]].nilai);
@@ -345,7 +346,7 @@ class _MenuBantuanViewState extends State<MenuBantuanView> {
               "data:image/jpeg;base64,${base64Encode(imageListInt)}";
           files.insert(i, base64Image);
         }
-        await BantuanModel.postBantuan(jenisBantuanSelected['id'], komentar,
+        await BantuanModel.postBantuan(jenisBantuanSelected?['id'], komentar,
                 files, soal, jawaban, nilai, id_jawaban)
             .then((value) {
           setState(() {

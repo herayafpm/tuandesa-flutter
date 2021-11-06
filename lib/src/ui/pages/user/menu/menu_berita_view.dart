@@ -45,13 +45,13 @@ class _MenuBeritaViewState extends State<MenuBeritaView> {
   String name = "";
   String komentar = "";
   bool loading = false;
-  late Map<String, dynamic> jenisBeritaSelected;
+  Map<String, dynamic>? jenisBeritaSelected;
   List<Map<String, dynamic>> _jenisBerita = [];
   List<Map<String, dynamic>> _status = [
     {"id": 0, "text": "Proses"},
     {"id": 1, "text": "Selesai"}
   ];
-  late Map<String, dynamic> statusSelected;
+  Map<String, dynamic> statusSelected = {};
   List<Asset> lampiran = [];
   late String _error;
   @override
@@ -272,8 +272,8 @@ class _MenuBeritaViewState extends State<MenuBeritaView> {
               "data:image/jpeg;base64,${base64Encode(imageListInt)}";
           files.insert(i, base64Image);
         }
-        await BeritaModel.postBerita(jenisBeritaSelected['id'], komentar, files,
-                statusSelected['id'].toString())
+        await BeritaModel.postBerita(jenisBeritaSelected?['id'], komentar,
+                files, statusSelected['id'].toString())
             .then((value) {
           setState(() {
             loading = false;

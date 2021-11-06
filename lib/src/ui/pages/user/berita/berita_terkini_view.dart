@@ -21,7 +21,7 @@ class _BeritaTerkiniViewState extends State<BeritaTerkiniView> {
   final RefreshController _refreshController =
       RefreshController(initialRefresh: false);
   late BeritaBloc beritaBloc;
-  late String userId;
+  String userId = "";
   @override
   void initState() {
     super.initState();

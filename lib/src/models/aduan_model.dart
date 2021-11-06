@@ -38,7 +38,7 @@ class AduanModel extends Equatable {
     return AduanModel(
         id: data['id'].toString(),
         name: data['user']['name'],
-        userId: data['user_id'],
+        userId: int.parse(data['user_id']),
         komentar: data['komentar'],
         createdAt: data['created_at'],
         jenis: data['jenisaduan']['name'],

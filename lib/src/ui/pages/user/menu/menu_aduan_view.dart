@@ -44,7 +44,7 @@ class _MenuAduanViewState extends State<MenuAduanView> {
   String name = "";
   String komentar = "";
   bool loading = false;
-  late Map<String, dynamic> jenisAduanSelected;
+  Map<String, dynamic>? jenisAduanSelected;
   List<Map<String, dynamic>> _jenisAduan = [];
   List<Asset> lampiran = [];
   late String _error;
@@ -231,7 +231,7 @@ class _MenuAduanViewState extends State<MenuAduanView> {
               "data:image/jpeg;base64,${base64Encode(imageListInt)}";
           files.insert(i, base64Image);
         }
-        await AduanModel.postAduan(jenisAduanSelected['id'], komentar, files)
+        await AduanModel.postAduan(jenisAduanSelected?['id'], komentar, files)
             .then((value) {
           setState(() {
             loading = false;

@@ -43,7 +43,7 @@ class _MenuPelayananViewState extends State<MenuPelayananView> {
   String name = "";
   String komentar = "";
   bool loading = false;
-  late Map<String, dynamic> jenisPelayananSelected;
+  Map<String, dynamic>? jenisPelayananSelected;
   List<Map<String, dynamic>> _jenisPelayanan = [];
   List<Asset> lampiran = [];
   late String _error;
@@ -230,7 +230,7 @@ class _MenuPelayananViewState extends State<MenuPelayananView> {
           files.insert(i, base64Image);
         }
         await PelayananModel.postPelayanan(
-                jenisPelayananSelected['id'], komentar, files)
+                jenisPelayananSelected?['id'], komentar, files)
             .then((value) {
           setState(() {
             loading = false;
